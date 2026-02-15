@@ -12,3 +12,7 @@ pub struct Escrow{
     pub recieve: u64,
     pub bump: u8,
 }
+
+impl Escrow {
+    pub const LEN: usize = 8 + 8 + 32 + 32 + 8 + 1;
+}
