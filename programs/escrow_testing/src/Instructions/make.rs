@@ -8,6 +8,8 @@ use anchor_spl::{
     token_interface::{transfer_checked, Mint, TokenAccount,TokenInterface, TransferChecked}
 };
 
+
+
 #[derive(Accounts)]
 #[instruction(seed: u64)]
 pub struct Make<'info> {
@@ -19,14 +21,14 @@ pub struct Make<'info> {
     #[account(
         mint::token_program = token_program)]
     pub mint_b: InterfaceAccount<'info, Mint>,
-#[account(
+    #[account(
     mut,
     associated_token::mint = mint_a,
     associated_token::authority = maker,
     associated_token::token_program = token_program
 )]
 
-    pub maker_ata_a: InterfaceAccount<'info, TokenAccount<'info>,
+    pub maker_ata_a: InterfaceAccount<'info, TokenAccount>,
     #[account(
         init,
         payer = maker,
@@ -73,5 +75,14 @@ impl<'info> Make<'info> {
         };
         let cpi_ctx = CpiContext::new(self.token_program.to_account_info(), tranfer_accounts);
         transfer_checked(cpi_ctx, deposit, self.mint_a.decimals)
+    }
+
+    pub fn handler( ctx: Context<Make>, seed: u64, deposit: u64, recieve: u64,) -> Result<()> {
+    // set state
+        let escrow = &mut ctx.accounts.escrow;
+            escrow.maker = ctx.accounts.maker.key();
+            escrow.seed = seed;
+            escrow.recieve = recieve;
+        Ok(())
     }
 }

@@ -46,6 +46,10 @@ pub struct Refund<'info> {
     
 }
 
+pub fn handler(_ctx: Context<Refund>, _seed: u64) -> Result<()> {
+    Ok(())
+}
+
 
 impl<'info> Refund<'info> {
     pub fn refund_and_close_vault(&mut self) -> Result<()> {
